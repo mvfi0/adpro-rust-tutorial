@@ -84,5 +84,10 @@ This is the place for you to write reflections:
 3. Do we still need DashMap or can we use Singleton pattern instead?
    We need both. Singleton (lazy_static!) ensures only one instance of SUBSCRIBERS exists, but it does not guarantee thread safety of the data inside. DashMap provides thread-safe concurrent access without explicit locking. If we used a regular HashMap with only Singleton, we would still need Mutex or RwLock, which would be slower due to locking the entire map. DashMap handles this with fine-grained internal locking.
 #### Reflection Publisher-2
-
+1. Why do we need to separate "Service" and "Repository" from a Model?
+   Separating Service and Repository follows the Single Responsibility Principle. Repository handles data access (CRUD operations), Service handles business logic, and Model only holds data structure. If we combine them all in Model, each model would become bloated with both data access and business logic code, making it harder to maintain and test.
+2. What happens if we only use the Model?
+   If we only use Model, each model (Product, Subscriber, Notification) would need to contain its own data access and business logic. The interactions between models would increase code complexity significantly — for example, Product would need to directly know about Subscriber and Notification to handle notifications on creation/deletion. This creates tight coupling between models, making the code harder to modify and test.
+3. How does Postman help you test your current work?
+   Postman helps by letting me send HTTP requests (POST, GET, DELETE) to test the API endpoints without needing a frontend. I can quickly test subscribe/unsubscribe endpoints with different payloads and see the responses. Useful features include collections for organizing requests, environment variables for switching between different ports, and the ability to save and share test configurations with the team.
 #### Reflection Publisher-3
