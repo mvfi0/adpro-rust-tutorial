@@ -77,7 +77,12 @@ This is the place for you to write reflections:
 ### Mandatory (Publisher) Reflections
 
 #### Reflection Publisher-1
-
+1. Do we still need an interface/trait or is a single Model struct enough?
+   In this case, a single Model struct is enough because we only have one type of Subscriber. All subscribers behave the same way — they receive notifications via HTTP POST to their URL. If we had different types of subscribers with different notification methods (e.g., email, SMS, webhook), then a trait would be needed. But since there is only one variant, adding a trait would be unnecessary abstraction.
+2. Is using Vec sufficient or is DashMap necessary?
+   DashMap is necessary because id and url are intended to be unique. DashMap provides O(1) lookup by key, while Vec would require O(n) iteration to check for duplicates or find a specific subscriber. The nested DashMap structure also makes it efficient to group subscribers by product type and quickly add, find, or remove them.
+3. Do we still need DashMap or can we use Singleton pattern instead?
+   We need both. Singleton (lazy_static!) ensures only one instance of SUBSCRIBERS exists, but it does not guarantee thread safety of the data inside. DashMap provides thread-safe concurrent access without explicit locking. If we used a regular HashMap with only Singleton, we would still need Mutex or RwLock, which would be slower due to locking the entire map. DashMap handles this with fine-grained internal locking.
 #### Reflection Publisher-2
 
 #### Reflection Publisher-3
