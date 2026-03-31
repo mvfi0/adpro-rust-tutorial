@@ -4,7 +4,6 @@ use rocket::serde::json::Json;
 use bambangshop::Result;
 use crate::model::product::Product;
 use crate::service::product::ProductService;
-use crate::service::notification::NotificationService;
 
 
 #[post("/", data = "<product>")]
